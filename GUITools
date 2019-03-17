@@ -1,0 +1,20 @@
+import java.awt.Component;
+import java.awt.Toolkit;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+public class GUITools {
+	//Java提供的GUI默认工具类对象
+	static Toolkit kit=Toolkit.getDefaultToolkit();//getDefaultToolkit()获取默认工具包。 
+	//将指定组件屏幕居中
+	public static void center(Component c){
+		int x=(kit.getScreenSize().width-c.getWidth())/2; //getScreenSize()获取屏幕的大小
+		int y=(kit.getScreenSize().height-c.getHeight())/2;
+		c.setLocation(x,y);
+	}
+	//设置窗口图标标题
+	public static void setTitleImage(JFrame frame,String titleIconPath){
+		frame.setIconImage(kit.createImage(titleIconPath));
+		//setIconImage(Image image)设置要作为此窗口图标显示的图像。 
+		//createImage(byte[] imagedata)创建一幅图像，该图像对存储在指定字节数组中的图像进行解码。  返回一幅图像
+	}
+}
