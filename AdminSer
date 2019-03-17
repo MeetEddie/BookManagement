@@ -1,0 +1,128 @@
+import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
+
+public class AdminSer {
+	private DataBase dataBase = new DataBase();
+	private ArrayList<Admin> admins = dataBase.getAdmins();
+	private ArrayList<Books> books = dataBase.getdata();
+
+	// 获取全部数据
+	public ArrayList<Books> queryBooks() {
+		ArrayList<Books> data = dataBase.getdata();
+		return data;
+	}
+
+	public Books queryBook(int position) {
+		Books books = dataBase.get(position);
+		return books;
+	}
+
+	public Books querybook(String id) {
+		Books books = dataBase.getBooks(id);
+		return books;
+	}
+
+	// 删除数据
+	public void delBooks(int position) {
+		dataBase.remove(position);
+	}
+
+	public void delbooks(String id) {
+		dataBase.removeBook(id);
+	}
+
+	// 添加数据
+	public boolean addBooks(String id, String bookname, String writer,
+			String kind, String publish, String time, String price) {
+		ArrayList<Books> data = dataBase.getdata();
+		for (int i = 0; i < data.size(); i++) {
+			Books books = data.get(i);
+			// 存在重复编号
+			if (id.equals(books.getId())) {
+				return false;
+			}
+		}
+		// 说明没有重复编号
+		Books thisBooks = new Books(id, bookname, writer, kind, publish, time,
+				Double.parseDouble(price));
+		dataBase.add(thisBooks);// 调用dataBase的add()功能
+		return true;
+	}
+
+	// 修改
+	public boolean changeBooks(String ID, String id, String bookname,
+			String writer, String kind, String publish, String time,
+			String price) {
+		ArrayList<Books> data = dataBase.getdata();// 定义ArrayList<Books>集合data为调用dataBase的getdata()函数
+		dataBase.removeBook(ID);// 调用dataBase的removeBook()功能
+		Books books = new Books(id, bookname, writer, kind, publish, time,
+				Double.parseDouble(price));
+		dataBase.add(books);// 调用dataBase的add()功能
+		return true;
+	}
+
+	// 判断登录号是否升序排列
+	public boolean judge(ArrayList<Books> books) {
+		for (int i = 0; i < books.size(); i++) {
+			if (Integer.parseInt(books.get(i).getId()) < Integer.parseInt(books
+					.get(i + 1).getId())) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	// 排序
+	public void sortBooks() {
+		if (judge(books) == false) {
+			ArrayList<Books> newbook = new ArrayList<Books>();// 定义一个新的ArrayList<Books>存放排序后的数据
+			int index;
+			int l = books.size();
+			for (int i = 0; i < l; i++) {
+				index = findMiniItem();
+				newbook.add(books.get(index));
+				books.remove(index);// 删去位置为index的图书
+			}
+			dataBase.replece(newbook);// 调用dataBase的replece()函数
+		}
+	}
+
+	public int findMiniItem() {
+		int a = 10000;
+		int index = -1;// 初始位置为-1
+		for (int i = 0; i < books.size(); i++) {
+			if (Integer.parseInt(books.get(i).getId()) < a) {// 若登录号小于a
+				a = Integer.parseInt(books.get(i).getId());
+				index = i;// 位置为i
+			}
+		}
+		return index;
+	}
+	//登陆
+	public boolean login(String account, String key) {
+		ArrayList<Admin> dataAdmins = dataBase.getAdmins();
+		for (int i = 0; i < dataAdmins.size(); i++) {
+			Admin admins = dataAdmins.get(i);
+			if (account.equals(admins.getAccount())
+					&& key.equals(admins.getKey())) {
+				return true;
+			}
+		}
+		return false;
+	}
+	//添加管理员信息
+	public boolean addAdmin(String account, String key, String key1,
+			String name, String phone, String email) {
+		for (int i = 0; i < admins.size(); i++) {
+			Admin admin = admins.get(i);
+			// 存在重复编号
+			if (account.equals(admin.getAccount())) {
+				return false;
+			}
+		}
+		Admin thisAdmin = new Admin(account, key, key1, name, phone, email);
+		dataBase.addAdmin(thisAdmin);
+		return true;
+	}
+}
