@@ -1,0 +1,178 @@
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.awt.*;
+import javax.swing.*;
+public class ChangeBook extends JFrame{
+	//定义界面使用到的组件作为成员变量
+	AdminSer adminSer=new AdminSer();
+	private JLabel titleLabel=new JLabel(new ImageIcon("02.jpg"));
+	private JLabel idJLabel;
+	private JLabel bookJLabel;
+	private JLabel kindJLabel;
+	private JLabel pubJLabel;
+	private JLabel timeJLabel;
+	private JLabel priceJLabel;
+	private JFrame jFrame;
+	JButton addbt,rebt,clbt;//添加，重置，关闭按钮
+	private JComboBox comboBox;
+	private JTextField idtext;
+	private JTextField booktext;
+	private JTextField writertext;
+	private JTextField putext;
+	private JTextField timetext;
+	private JTextField pricetext;
+	public ChangeBook(String ID){
+		init();//初始化操作
+		addComponent();//添加组件
+		String id =adminSer.querybook(ID).getId();
+		String bookname =adminSer.querybook(ID).getBookname();
+		String writer =adminSer.querybook(ID).getWriter();
+		String kind =adminSer.querybook(ID).getKind();
+		String publish =adminSer.querybook(ID).getPublish();
+		String time =adminSer.querybook(ID).getTime();
+		double price =adminSer.querybook(ID).getPrice();
+		idtext.setText(id);
+		booktext.setText(bookname);
+		writertext.setText(writer);
+		putext.setText(publish);
+		comboBox.setSelectedItem(kind);
+		timetext.setText(time);
+		pricetext.setText(String.valueOf(price));
+		addListener(ID);//添加监听器
+	}
+	//初始化操作
+	public void init(){
+		setTitle("修改图书信息");
+		this.setSize(800,550);//窗体大小与位置
+		GUITools.center(this);
+		GUITools.setTitleImage(this, "01.png");
+		setResizable(false);//窗体大小固定
+		setLayout(null); //取消布局
+		titleLabel.setBounds(20, 0, 750, 170);
+		add(titleLabel);
+	}
+	//添加组件
+	public void addComponent(){
+		JLabel idJLabel=new JLabel(" 登 录 号");
+		idJLabel.setBounds(100, 220, 100, 40); 
+		add(idJLabel);
+		idtext=new JTextField();
+		idtext.setBounds(170, 220, 180, 35);
+		add(idtext);
+		JLabel bookJLabel=new JLabel("  书   名");
+		bookJLabel.setBounds(100, 270, 100, 40); 
+		add(bookJLabel);
+		booktext=new JTextField();
+		booktext.setBounds(170,270, 180, 35);
+		add(booktext);
+		JLabel writerJLabel=new JLabel(" 作   者");
+		writerJLabel.setBounds(100, 320, 100, 40); 
+		add(writerJLabel);
+		writertext=new JTextField();
+		writertext.setBounds(170, 320, 180, 35);
+		add(writertext);
+		JLabel kindJLabel=new JLabel("  类   别");
+		kindJLabel.setBounds(100, 370, 100, 40); 
+		add(kindJLabel);
+		comboBox=new JComboBox();
+		comboBox.addItem("请选择类别");
+		comboBox.addItem("马列主义,毛泽东思想");
+		comboBox.addItem("政治，法律");
+		comboBox.addItem("军事");
+		comboBox.addItem("自然科学总论");
+		comboBox.addItem("计算机技术");
+		comboBox.addItem("语言，文字");
+		comboBox.addItem("数理科学和化学");
+		comboBox.addItem("工业技术");
+		comboBox.addItem("历史，地理");
+		comboBox.setBounds(170, 370, 180, 35);
+		add(comboBox);
+		JLabel puJLabel=new JLabel(" 出 版 社");
+		puJLabel.setBounds(410, 220, 120, 40); 
+		add(puJLabel);
+		putext=new JTextField();
+		putext.setBounds(480, 220, 180, 35);
+		add(putext);
+		JLabel timeJLabel=new JLabel("出版时间");
+		timeJLabel.setBounds(410, 270, 120, 40); 
+		add(timeJLabel);
+		timetext=new JTextField();
+		timetext.setBounds(480, 270, 180, 35);
+		add(timetext);
+		JLabel priceJLabel=new JLabel("  价   格");
+		priceJLabel.setBounds(410, 320, 120, 40); 
+		add(priceJLabel);
+		pricetext=new JTextField();
+		pricetext.setBounds(480, 320, 180, 35);
+		add(pricetext);
+		JPanel panel2=new JPanel();
+		panel2.setLayout(new FlowLayout());
+		addbt=new JButton("确定");
+		addbt.setBounds(260, 440, 70, 30);
+		rebt=new JButton("重置");
+		rebt.setBounds(360, 440, 70, 30);
+		clbt=new JButton("关闭");
+		clbt.setBounds(460, 440, 70, 30);
+		add(addbt);
+		add(rebt);
+		add(clbt);
+	}
+	//添加监听器
+	public void addListener(String ID){
+		addbt.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String id = idtext.getText().toString(); 
+				String bookname = booktext.getText(); 
+				String writer = writertext.getText(); 
+				String kind = comboBox.getSelectedItem().toString(); 
+				String publish = putext.getText(); 
+				String time = timetext.getText().trim(); 
+				String price = pricetext.getText().trim(); 
+				/*判断输入信息是否为空，为空提示请输入完整信息，若输入信息登陆号相同，
+				    则提示登陆号相同，否则提示添加成功 */
+				if (id.equals("") || bookname.equals("") || writer.equals("") 
+					   || comboBox.getSelectedItem()=="请选择类别"|| publish.equals("") 
+					   || time.equals("") 
+					   || price.equals("")) { 
+					  JOptionPane.showMessageDialog(null, "请输入完整信息"); 
+					  return ; 
+				}
+				else {
+					Books books=new Books();
+					books.setId(id);
+					books.setBookname(bookname);
+					books.setWriter(writer);
+					books.setKind(kind);
+					books.setPublish(publish);
+					books.setTime(time);
+					books.setPrice(Double.parseDouble(price));
+					JOptionPane.showMessageDialog(null, "修改成功");  
+					adminSer.changeBooks(ID,id, bookname, writer, kind, publish, time, price);
+				}
+			}
+		});
+		rebt.addActionListener(new ActionListener() {	
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				idtext.setText("");
+				booktext.setText("");
+				writertext.setText("");
+				comboBox.setSelectedItem("请选择类别");
+				putext.setText("");
+				timetext.setText("");
+				pricetext.setText("");
+			}
+		});
+		clbt.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				dispose(); 
+				new AdminDialogController().setVisible(true);
+				}
+			});
+	}
+	
+}
