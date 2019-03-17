@@ -1,0 +1,9 @@
+public class MainApp{
+	//项目运行入口
+	public static void main(String[] args) {
+		// 创建DataBase对象
+		DataBase dataBase=new DataBase();
+		dataBase.initData();
+		new Welcome().setVisible(true);
+	}
+}
