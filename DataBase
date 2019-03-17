@@ -1,0 +1,73 @@
+import java.util.ArrayList;
+
+import javax.print.attribute.Size2DSyntax;
+public class DataBase {
+	private static ArrayList<Books> data=new ArrayList<Books>();
+	private static ArrayList<Admin> admin=new ArrayList<Admin>();
+		
+	public DataBase(){
+		super();
+	}
+	//初始数据
+	public void initData() {
+		data.clear();//删除该集合中的所有元素
+		//向集合中添加元素
+		data.add(new Books("0015","C语言","彭于晏","计算机技术","邮电大学出版社","2008年5月",102));
+		data.add(new Books("0016","B语言","彭于晏","计算机技术","中国大学出版社","2008年10月",50));
+		data.add(new Books("0017","数据结构","彭于","计算机技术","浙江大学出版社","2008年3月",60));
+		data.add(new Books("0018","c","彭于晏","工业技术","新闻大学出版社","2008年10月",100.5));
+		data.add(new Books("0011","B","彭于晏","工业技术","中国大学出版社","2008年10月",101));
+		admin.clear();
+		admin.add(new Admin("599", "123456","123456","158221001010", "李欣欣", "2052915@qq.com"));
+		admin.add(new Admin("Lixinxin", "123456","123456", "158221001010", "李欣欣", "2052915@qq.com"));
+	}
+	//获取图书数据
+	public ArrayList<Books>getdata() {
+		return data;
+	}
+	//获取该位置的图书信息
+	public Books get(int position) {
+		return data.get(position);
+	}
+	//获取该id的图书信息
+	public Books getBooks(String id){
+		//size()获取该集合元素个数
+		for(int i=0;i<data.size();i++){
+			//创建Books类为data集合
+			Books books=data.get(i);
+			if(books.getId().equals(id)){
+				return data.get(i);
+			}
+		}
+		return null;
+	}
+	//添加图书信息
+	public void add(Books books){
+		data.add(books);
+	}
+	//删除图书信息
+	public void remove(int position){	
+		//remove()删除该集合中的指定元素
+		data.remove(position);
+	}
+	public void removeBook(String id){
+		for(int i=0;i<data.size();i++){
+			Books books=data.get(i);
+			if(books.getId().equals(id)){
+				data.remove(i);
+			}
+		}
+	}
+	//新的排序后的数据取代之前的数据
+	public void replece(ArrayList<Books> data){	
+		DataBase.data=data;
+	}	
+	//获取管理员信息
+	public ArrayList<Admin>getAdmins(){
+		return admin;
+	}
+	//添加管理员信息
+	public void addAdmin(Admin admins){
+		admin.add(admins);
+	}
+}
