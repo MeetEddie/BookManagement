@@ -1,0 +1,122 @@
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.util.Vector;
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+
+public abstract class AbstractAdminDialog extends JFrame{
+	//定义界面使用的组件作为成员变量
+	private JLabel tableLabel=new JLabel("图书信息列表");
+	private JScrollPane tablePan=new JScrollPane();//表格
+	protected JTable table=new JTable();	
+	protected JTextField searchText=new JTextField(10);
+	private JButton searchbt=new JButton("🔎");
+	private JButton delbt=new JButton("删除信息");
+	private JButton chabt=new JButton("修改信息");
+	private JButton addbt=new JButton("录入图书");
+	private JButton sortbt=new JButton("排序");	
+	private JButton rebt=new JButton("刷新");
+	private JButton exitbt=new JButton("退出");
+	private JPopupMenu popupMenu;	
+	public AbstractAdminDialog(){
+		super();
+		this.init();//初始化操作
+		this.addComponent();//添加组件
+		this.addListener();//添加监听器
+	}
+	//初始化操作
+	private void init(){
+		this.setTitle("图书信息管理");
+		this.setSize(800, 550);
+		GUITools.center(this);
+		GUITools.setTitleImage(this, "01.png");
+		this.setResizable(false);
+	}
+	//添加组件
+	private void addComponent(){
+		this.setLayout(null);//初始化操作
+		tableLabel.setBounds(60,100,150,25);//表格标题
+		this.add(tableLabel);
+		table.setEnabled(true);
+		DefaultTableModel model=(DefaultTableModel)table.getModel();
+		table.getTableHeader().setReorderingAllowed(false);//不可拉动表格
+		tablePan.setBounds(60,130,660,200);
+		tablePan.setViewportView(table);//视口装入表格
+		this.add(tablePan);
+		table.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+		searchText.setBounds(60,50,150,30);//图书查询功能组件
+		searchbt.setBounds(210, 50, 70, 30);
+		this.add(searchText);
+		this.add(searchbt);
+		delbt.setBounds(290, 50, 100, 30);//其他按钮组件设置
+		chabt.setBounds(400, 50, 100, 30);
+		addbt.setBounds(510, 50, 100, 30);
+		sortbt.setBounds(620, 50,100, 30);
+		rebt.setBounds(620, 400, 100, 30);
+		exitbt.setBounds(510,400,100,30);
+		this.add(delbt);
+		this.add(chabt);
+		this.add(addbt);
+		this.add(sortbt);
+		this.add(rebt);
+		this.add(exitbt);
+	}
+	//监听器
+	private void addListener(){
+		//查询按钮
+		searchbt.addActionListener(new ActionListener() {	
+			public void actionPerformed(ActionEvent e) {
+				searchBooks();
+			}
+		});	
+		//删除按钮
+		delbt.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				delBooks();
+			}
+		});
+		//修改按钮
+		chabt.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				changeBooks();
+			}
+		});
+		//添加按钮
+		addbt.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				addBooks();
+			}
+		});
+		//排序按钮
+		sortbt.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				sortBooks();
+			}
+		});
+		//刷新按钮
+		rebt.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				refreshBook();
+				searchText.setText("");
+			}
+		});
+		exitbt.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				dispose();
+				new Welcome().setVisible(true);
+			}
+		});
+	}
+	public abstract void searchBooks();
+	public abstract void delBooks();;
+	public abstract void changeBooks();
+	public abstract void sortBooks();
+	public abstract void refreshBook();
+	public abstract void addBooks();
+}
