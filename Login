@@ -1,0 +1,157 @@
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+
+//注册界面
+public class Login extends JFrame{
+	private JLabel titleLabel=new JLabel(new ImageIcon("02.jpg"));
+	private JLabel accountJLabel=new JLabel("   账 户 名");
+	private JLabel keyJLabel=new JLabel("    密   码  ");
+	private JLabel key1jJLabel=new JLabel("再次输入密码");
+	private JLabel nameJLabel=new JLabel(" 姓      名");
+	private JLabel phonejJLabel=new JLabel("电话号码");
+	private JLabel emailJLabel=new JLabel("   Email  ");
+	private JLabel title=new JLabel("注          册");
+	private JPanel panel2=new JPanel();
+	JButton addbt,rebt,clbt;//注册，重置，关闭按钮
+	private JTextField accounText=new JTextField();
+	private JPasswordField keyText=new JPasswordField();
+	private JPasswordField key1Text=new JPasswordField();
+	private JTextField nameText=new JTextField();
+	private JTextField phoneText=new JTextField();
+	private JTextField emailText=new JTextField();
+	AdminSer adminSer=new AdminSer();
+	public Login(){	
+		init();//初始化操作
+		addComponent();//添加组件
+		addListener();//添加监听器
+	}
+	//初始化操作
+	public void init(){
+		setTitle("注册");
+		this.setSize(800,550);//窗体大小与位置
+		GUITools.center(this);
+		GUITools.setTitleImage(this, "01.png");
+		setResizable(false);//窗体大小固定
+		setLayout(null); //取消布局
+		titleLabel.setBounds(20, 0, 750, 170);
+		add(titleLabel);
+	}
+	//添加组件
+	public void addComponent(){
+		title.setBounds(330, 120, 300, 200);
+		add(title);
+		title.setFont(new Font("微软雅黑", Font.PLAIN, 26));	
+		accountJLabel.setBounds(90, 265, 70, 40); 
+		add(accountJLabel);
+		accounText.setBounds(165, 270, 180, 35);
+		add(accounText);
+		keyJLabel.setBounds(90, 315, 70, 40); 
+		add(keyJLabel);
+		keyText.setBounds(165,320, 180, 35);
+		add(keyText);
+		key1jJLabel.setBounds(80, 365, 100, 40); 
+		add(key1jJLabel);	
+		key1Text.setBounds(165, 370, 180, 35);
+		add(key1Text);
+		nameJLabel.setBounds(410, 265, 70, 40); 
+		add(nameJLabel);
+		nameText.setBounds(480,270,180,35);
+		add(nameText);
+		phonejJLabel.setBounds(410, 315,70, 40); 
+		add(phonejJLabel);
+		phoneText.setBounds(480, 320, 180, 35);
+		add(phoneText);
+		emailJLabel.setBounds(410, 365, 70, 40); 
+		add(emailJLabel);
+		emailText=new JTextField();
+		emailText.setBounds(480, 370, 180, 35);
+		add(emailText);		
+		
+		panel2.setLayout(new FlowLayout());
+		addbt=new JButton("注册");		
+		addbt.setBounds(260, 440, 70, 30);
+		rebt=new JButton("重置");	
+		rebt.setBounds(360, 440, 70, 30);
+		clbt=new JButton("关闭");	
+		clbt.setBounds(460, 440, 70, 30);
+		add(addbt);
+		add(rebt);
+		add(clbt);
+	}
+	public void addListener(){
+		addbt.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				String account = accounText.getText().toString(); 
+				String key = keyText.getText().toString(); 
+				String key1 = key1Text.getText().toString(); 
+				String name =nameText.getText().toString(); 
+				String phone = phoneText.getText().toString(); 
+				String email = emailText.getText().toString(); 
+				if (account.equals("") || key.equals("") || key1.equals("") 
+						   || name.equals("") 
+						   || phone.equals("") 
+						   || email.equals("")) { 
+						  JOptionPane.showMessageDialog(null, "请输入完整信息"); 
+						  return; 
+				 }
+				else {
+					if(adminSer.addAdmin(account, key, key1, name, phone, email)==false){
+						  JOptionPane.showMessageDialog(null, "用户名相同"); 
+						accounText.setText("");
+						keyText.setText("");
+						key1Text.setText("");
+						nameText.setText("");
+						phoneText.setText("");
+						emailText.setText("");
+					}
+					else if(!key.equals(key1)){
+						JOptionPane.showMessageDialog(null, "密码输入不同");	
+						keyText.setText("");
+						key1Text.setText("");
+					}
+					else {
+						adminSer.addAdmin(account, key, key1, name, phone, email);
+						 JOptionPane.showMessageDialog(null, "注册成功");	
+					}
+				}
+			}
+		});
+		rebt.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				 accounText.setText("");
+				  keyText.setText("");
+				  key1Text.setText("");
+				  nameText.setText("");
+				  phoneText.setText("");
+				  emailText.setText("");
+				
+			}
+		});
+		clbt.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				dispose();
+				new Welcome().setVisible(true);
+			}
+		});
+	}
+	
+}
