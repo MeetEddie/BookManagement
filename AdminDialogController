@@ -1,0 +1,94 @@
+import java.util.ArrayList;
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
+//管理员界面按钮操作类（界面抽象类的一个具体实现类）
+public class AdminDialogController extends AbstractAdminDialog{
+	private AdminSer adminSer=new AdminSer();
+	//构造方法
+	public AdminDialogController() {
+		super();
+		queryBooks();
+	}
+	//获取图书信息
+	public void queryBooks() {
+		// 定义表格头
+		String [] thead=new String[]{"登录号","书名","作者名","分类号","出版单位","出版时间","价格"};
+		//调用adminSer的查询方法
+		ArrayList<Books> dataList=adminSer.queryBooks();
+		//调用list2Array方法，将查询的集合转为数组，方便为JTable赋值
+		String[][] tbody=list2Array(dataList);
+		//将查询的结果为table赋值
+		TableModel dataModel=new DefaultTableModel(tbody,thead);
+		table.setModel(dataModel);
+	}
+	public String[][] list2Array(ArrayList<Books>list){
+		//根据Books的model与集合数据定义Jtable的数据二维数组
+		String[][] tbody=new String[list.size()][7];
+		for(int i=0;i<list.size();i++){
+			Books books=list.get(i);
+			tbody[i][0]=books.getId();
+			tbody[i][1]=books.getBookname();
+			tbody[i][2]=books.getWriter();
+			tbody[i][3]=books.getKind();
+			tbody[i][4]=books.getPublish();
+			tbody[i][5]=books.getTime();
+			tbody[i][6]=books.getPrice()+"";
+		}
+		return tbody;
+	}
+	//查询功能
+	public void searchBooks() {
+		DefaultTableModel model=(DefaultTableModel)table.getModel();//获得表格模型
+		table.setAutoCreateRowSorter(true);// 指定其模型更改时为表创建一个 RowSorter。
+		TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel>(model); 
+		table.setRowSorter(sorter); //设置 RowSorter。RowSorter 用于提供对 JTable 的排序和过滤。
+		String searchbook=searchText.getText();//获取搜索框中的输入
+		sorter.setRowFilter(RowFilter.regexFilter(searchbook));	
+	}
+	
+	//删除
+	public void delBooks() {
+		DefaultTableModel model=(DefaultTableModel)table.getModel();//获得表格模型
+		int index=table.getSelectedRow();//获得选择的索引		
+		if(index==-1){ //如何没有选择
+			JOptionPane.showMessageDialog( this, "请选择要删除的行","",JOptionPane.WARNING_MESSAGE);
+			return ;
+		}
+		String id= table.getValueAt(index,0).toString();
+		model.removeRow(table.getSelectedRow());//删除用户选择的行	
+		adminSer.delbooks(id);//删除用户选择的信息	
+		table.setModel(model);//重新设置表格模型
+		JOptionPane.showMessageDialog( this, "删除成功","",JOptionPane.WARNING_MESSAGE);
+	}
+	//修改
+	public void changeBooks() {
+		DefaultTableModel model=(DefaultTableModel)table.getModel();//获得表格模型
+		int index=table.getSelectedRow();//获得选择的索引
+		System.out.println(index);
+		if(index==-1){ //如何没有选择
+			JOptionPane.showMessageDialog( this, "请选择要修改的行","",JOptionPane.WARNING_MESSAGE);
+			return ;
+		}
+		dispose();
+		String id= table.getValueAt(index,0).toString();
+		new ChangeBook(id).setVisible(true);
+		table.setModel(model);//重新设置表格模型
+	}
+	//排序
+	public void sortBooks() {
+		adminSer.sortBooks();
+		queryBooks();
+	}
+	//刷新
+	public void refreshBook() {
+		queryBooks();
+	}
+	//添加图书信息
+	public void addBooks() {
+		new AddBook().setVisible(true);
+		
+	}
+}
