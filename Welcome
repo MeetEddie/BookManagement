@@ -1,0 +1,112 @@
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+
+public class Welcome extends JFrame{//构建Welcome类继承JFrame
+	//Jframe：是一个独立存在的顶级窗口，不能放置于其他容器中。
+	//定义成员变量
+	private JPanel btnJPanel1=new JPanel();
+	/*
+	 * 中间容器：JPanel，它是一个无边框，不能被移动放大、缩小或关闭的面板，它的默认布局管理器是FlowLayout
+	 */
+	private JLabel titleLabel=new JLabel(new ImageIcon("01.jpg"));
+	// 按钮组件(JButton按钮、JCheckBox复选框、JRadioButton单选按钮等)
+	private JButton btn=new JButton("登陆");
+	private JButton loginbtn=new JButton("注册");
+	//JLabel标签
+	private JLabel accountJLabel=new JLabel("账号:");
+	private JLabel keyJLabel=new JLabel("密码:");
+	private JTextField accountField=new JTextField();
+	private JPasswordField keyField=new JPasswordField();
+	/*	JtextField文本框，其父类为父类JTextComponent。
+	 * 	JTextComponent常用方法
+		String getText()   返回文本组件中所有的文本内容
+		void setText(String text)     设置文本组件的内容
+		JtextField: 只能接受单行文本的输入
+		构造方法:
+		1.JtextField()创建一个空的文本框，初始字符串为null
+		2.JtextField(String text) 创建一个显示初始字符串的文本框
+		3.JtextField(int columns) 创建一个具有制定列数的文本框，初始字符为null
+		JtextField有一个子类JPasswordText,表示一个密码框，只能接受用户的单行输入
+				新创建的密码框默认地会显示字符为“*”。
+	 */	
+	AdminSer adminSer=new AdminSer();//创建AdminSer对象
+	public Welcome(){
+		this.init();	//初始化操作
+		this.addComponent(); //添加组件
+		this.addListener();//添加监听器
+	}
+	//初始化操作
+	private void init(){
+		this.setTitle("欢迎进入图书管理系统");
+		this.setSize(800,550);//窗体大小与位置
+		GUITools.center(this);
+		GUITools.setTitleImage(this, "01.png");
+		this.setResizable(false);//窗体大小固定
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//关闭窗口默认操作
+	}
+	//添加组件
+	private void addComponent(){
+		//BorderLayout边界布局管理器，将容器划分为5个区域，分别是东南西北中
+		//将创建好的组件添加到窗体中，并设置按钮所在的区域
+		this.add(this.titleLabel,BorderLayout.NORTH);
+		btnJPanel1.setLayout(null);//清除btnJPanel1的布局
+		this.add(btnJPanel1);//对象btnJPanel1添加到窗体
+		//定义边界位置 setBounds(x坐标,y坐标, 组件的长,组件的宽)
+		accountJLabel.setBounds(70, 50, 30, 50);
+		accountField.setBounds(110,60, 200, 30);
+		keyJLabel.setBounds(340, 50, 30, 50);
+		keyField.setBounds(380,60,200,30);
+		btn.setBounds(630,60,120,30);
+		loginbtn.setBounds(630, 130, 120, 30);
+		//将对象添加在中间容器中
+		btnJPanel1.add(btn);
+		btnJPanel1.add(keyJLabel);
+		btnJPanel1.add(accountJLabel);
+		btnJPanel1.add(keyField);
+		btnJPanel1.add(accountField);
+		btnJPanel1.add(loginbtn);
+	} 
+	//添加监听器
+	public void addListener(){
+		
+		/*
+		 * 按钮的动作事件,动作事件一般用ActionEvent类表示，
+		 * 处理ActionEvent事件的监听器对象需要实现ActionListener接口。
+		 */
+		btn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//获取文本框的值
+				String account = accountField.getText().toString(); 
+				String key =keyField.getText().toString();
+				//判断账号密码是否输入正确
+				if(adminSer.login(account,key)==true){
+					dispose();//关闭当前界面
+					new AdminDialogController().setVisible(true);//打开新界面
+					accountField.setText("");//设置文本框的值为空字符
+					keyField.setText("");
+				}
+				else{				
+					JOptionPane.showMessageDialog(null, "账号或密码为空或输入错误");//提示出弹窗信息
+				}
+			}			
+		});
+		loginbtn.addActionListener(new ActionListener() {			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				dispose();
+				new Login().setVisible(true);
+			}
+		});
+	}
+}
