@@ -1,0 +1,83 @@
+/*
+ * 图书项数据模型
+ */
+public class Books {
+	private String id;//登录号
+	private String bookname;//书名
+	private String writer;//作者
+	private String kind;//种类
+	private String publish;//出版社
+	private String time;//出版时间
+	private double price;//价格 
+	//构造方法
+	public Books() {
+	
+	}
+	public Books(String id, String bookname, String writer, String kind,
+			String publish, String time, double price) {
+		super();
+		this.id = id;
+		this.bookname = bookname;
+		this.writer = writer;
+		this.kind = kind;
+		this.publish = publish;
+		this.time = time;
+		this.price = price;
+	}
+	//get/set方法
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getBookname() {
+		return bookname;
+	}
+
+	public void setBookname(String bookname) {
+		this.bookname = bookname;
+	}
+
+	public String getWriter() {
+		return writer;
+	}
+
+	public void setWriter(String writer) {
+		this.writer = writer;
+	}
+
+	public String getKind() {
+		return kind;
+	}
+
+	public void setKind(String kind) {
+		this.kind = kind;
+	}
+
+	public String getPublish() {
+		return publish;
+	}
+
+	public void setPublish(String publish) {
+		this.publish = publish;
+	}
+
+	public String getTime() {
+		return time;
+	}
+
+	public void setTime(String time) {
+		this.time = time;
+	}
+
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
+}
